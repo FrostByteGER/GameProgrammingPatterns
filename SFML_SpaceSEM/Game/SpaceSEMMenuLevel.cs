@@ -384,7 +384,9 @@ namespace SFML_SpaceSEM.Game
 
 				JButton applyOptionButton = new JButton(GUI);
 				applyOptionButton.Text.DisplayedString = "Apply";
-				applyOptionButton.IsVisable = false;
+				applyOptionButton.IsVisable = true;
+				applyOptionButton.Something += MusicSlider_Something;
+				applyOptionButton.Something += SoundSlider_Something;
 
 				JButton cancelOptionButton = new JButton(GUI);
 				cancelOptionButton.Text.DisplayedString = "Cancel";
@@ -535,26 +537,26 @@ namespace SFML_SpaceSEM.Game
 
 		private void MusicSlider_Something()
 		{
-			EngineReference.GlobalMusicVolume = (uint) musicSlider.SliderValue;
+			EngineReference.GlobalMusicVolume = (uint) (musicSlider.SliderValue * 100);
 			MenuMusic.Volume = EngineReference.GlobalMusicVolume;
 		}
 
 		private void SoundSlider_Something()
 		{
-			EngineReference.GlobalSoundVolume = (uint)soundSlider.SliderValue;
+			EngineReference.GlobalSoundVolume = (uint)(soundSlider.SliderValue * 100);
 		}
 
 		private void MusikBox_Something()
 		{
 			EngineReference.GlobalMusicEnabled = !EngineReference.GlobalMusicEnabled;
-			EngineReference.GlobalMusicVolume = (uint) (EngineReference.GlobalMusicEnabled ? 50 : 0);
+			//EngineReference.GlobalMusicVolume = (uint) (EngineReference.GlobalMusicEnabled ? 50 : 0);
 			MenuMusic.Volume = EngineReference.GlobalMusicVolume;
 		}
 
 		private void SoundBox_Something()
 		{
 			EngineReference.GlobalSoundEnabled = !EngineReference.GlobalSoundEnabled;
-			EngineReference.GlobalSoundVolume = (uint)(EngineReference.GlobalMusicEnabled ? 50 : 0);
+			//EngineReference.GlobalSoundVolume = (uint)(EngineReference.GlobalMusicEnabled ? 50 : 0);
 		}
 
 		public override void OnLevelLoad()
