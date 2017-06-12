@@ -411,7 +411,11 @@ namespace SFML_SpaceSEM.Game
 			creditContainer = new JContainer(GUI);
 			creditContainer.Layout = new JLayout(creditContainer);
 			JLabel creditTemp = new JLabel(GUI);
-			creditTemp.Text.DisplayedString = "Made By Kevin Kügler and Jan Schult";
+			creditTemp.Text.DisplayedString = 
+				"   Made By\n" +
+				"Kevin Kügler\n" +
+				"    and\n" +
+				"  Jan Schult";
 			creditContainer.addElement(creditTemp);
 
 			// Editor Menue
