@@ -120,6 +120,7 @@ namespace SFML_SpaceSEM.Game
 				editorsCheckBox.Text.DisplayedString = "Editor";
 				editorsCheckBox.Something += this.ChangeCenterContainer;
 				editorsCheckBox.IsVisable = false;
+				editorsCheckBox.IsEnabled = false;
 
 
 				exitCheckBox = new JCheckbox(GUI);
