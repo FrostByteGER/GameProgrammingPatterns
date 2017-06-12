@@ -18,6 +18,7 @@ namespace SFML_Engine.Engine.JUI
 		{
 			Text.Font = gui.GUIFont;
 			Text.FillColor = gui.DefaultTextColor;
+			Text.CharacterSize = 25;
 		}
 
 		public override void setPosition(Vector2f Position)
