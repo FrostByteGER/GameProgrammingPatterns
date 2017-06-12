@@ -108,6 +108,7 @@ namespace SFML_SpaceSEM.Game
 				helpCheckBox = new JCheckbox(GUI);
 				helpCheckBox.Text.DisplayedString = "Help";
 				helpCheckBox.Something += this.ChangeCenterContainer;
+				helpCheckBox.IsVisable = false;
 
 
 				creditsCheckBox = new JCheckbox(GUI);
@@ -129,7 +130,7 @@ namespace SFML_SpaceSEM.Game
 				JCheckboxGroup mainCheckBoxGroup = new JCheckboxGroup();
 				mainCheckBoxGroup.AddBox(playCheckBox);
 				mainCheckBoxGroup.AddBox(optionCheckBox);
-				mainCheckBoxGroup.AddBox(helpCheckBox);
+				//mainCheckBoxGroup.AddBox(helpCheckBox);
 				mainCheckBoxGroup.AddBox(creditsCheckBox);
 				mainCheckBoxGroup.AddBox(editorsCheckBox);
 				mainCheckBoxGroup.AddBox(exitCheckBox);
@@ -531,7 +532,7 @@ namespace SFML_SpaceSEM.Game
 
 			mainLeftContainer.addElement(playCheckBox);
 			mainLeftContainer.addElement(optionCheckBox);
-			mainLeftContainer.addElement(helpCheckBox);
+			//mainLeftContainer.addElement(helpCheckBox);
 			mainLeftContainer.addElement(creditsCheckBox);
 			mainLeftContainer.addElement(editorsCheckBox);
 			mainLeftContainer.addElement(exitCheckBox);
