@@ -568,14 +568,14 @@ namespace SFML_SpaceSEM.Game
 		private void MusikBox_Something()
 		{
 			EngineReference.GlobalMusicEnabled = !EngineReference.GlobalMusicEnabled;
-			//EngineReference.GlobalMusicVolume = (uint) (EngineReference.GlobalMusicEnabled ? 50 : 0);
+			EngineReference.GlobalMusicVolume = (uint) (EngineReference.GlobalMusicEnabled ? (musicSlider.SliderValue * 100) : 0);
 			MenuMusic.Volume = EngineReference.GlobalMusicVolume;
 		}
 
 		private void SoundBox_Something()
 		{
 			EngineReference.GlobalSoundEnabled = !EngineReference.GlobalSoundEnabled;
-			//EngineReference.GlobalSoundVolume = (uint)(EngineReference.GlobalMusicEnabled ? 50 : 0);
+			EngineReference.GlobalSoundVolume = (uint)(EngineReference.GlobalSoundEnabled ? (soundSlider.SliderValue * 100) : 0);
 		}
 
 		public override void OnLevelLoad()
