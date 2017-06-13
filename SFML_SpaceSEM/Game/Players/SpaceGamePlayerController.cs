@@ -8,9 +8,19 @@ namespace SFML_SpaceSEM.Game.Players
 {
 	public class SpaceGamePlayerController : PlayerController
 	{
+		private uint _score = 0;
 		public SpaceShipPlayer Player { get; set; }
+		public TextActor ScoreHUD { get; set; } = null;
 
-		public uint Score { get; set; } = 0;
+		public uint Score
+		{
+			get => _score;
+			set
+			{
+				_score = value;
+				ScoreHUD.TextComp.RenderText.DisplayedString = "Highscore: " + _score;
+			}
+		}
 
 		public SpaceGamePlayerController()
 		{
@@ -80,6 +90,7 @@ namespace SFML_SpaceSEM.Game.Players
 		public override void OnGameStart()
 		{
 			base.OnGameStart();
+			ScoreHUD = LevelReference.FindActorInLevel<TextActor>("Highscore");
 		}
 
 		public override void OnGamePause()

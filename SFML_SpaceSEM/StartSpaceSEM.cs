@@ -20,13 +20,6 @@ namespace SFML_SpaceSEM
 				MountainDewMode = bool.Parse(args[0]);
 			}
 
-			for (int i = 0; i < 4; ++i)
-			{
-				var levelData = GenerateLevel(5 + i * 3, 5 + i * 2);
-				JSONManager.SaveObject(@"../../../Assets/Levels/level_" + (i + 1) + ".json", levelData);
-				JSONManager.SaveObject(@"Assets/SFML_SpaceSEM/Levels/level_" + (i + 1) + ".json", levelData);
-			}
-
 
 			EngineRef.GameInfo = new SpaceSEMGameInfo();
 			EngineRef.GameInstance = new SpaceSEMGameInstance();
@@ -44,6 +37,8 @@ namespace SFML_SpaceSEM
 			Console.ReadLine();
 		}
 
+		/*
+		 * Not needed in Shipping Build.
 		public static SpaceLevelDataWrapper GenerateLevel(int maxwaves, int shipCountPerWave)
 		{
 			var wrapperData = new SpaceLevelDataWrapper();
@@ -135,6 +130,6 @@ namespace SFML_SpaceSEM
 				wrapperData.Spawners.Add(spawnerData);
 			}
 			return wrapperData;
-		}
+		}*/
 	}
 }

@@ -102,8 +102,6 @@
     <Compile Include="UI\SpaceGUI.cs" />
     <Compile Include="Game\SpaceSemGameInstance.cs" />
     <Compile Include="UI\SpawnerListContainer.cs" />
-    <None Include="Assets\arial.ttf" />
-    <None Include="Assets\comic.ttf" />
     <None Include="Assets\Levels\level_1.json" />
     <Compile Include="Game\SpaceSEMMenuLevel.cs" />
     <Compile Include="Game\SpaceSEMMenuPlayerController.cs" />
@@ -118,7 +116,18 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="Assets\Main.ttf" />
     <None Include="Assets\Packages.cfg" />
+    <None Include="Assets\SFX\BGM_Battle_01.ogg" />
+    <None Include="Assets\SFX\BGM_Battle_02.ogg" />
+    <None Include="Assets\SFX\BGM_Battle_03.ogg" />
+    <None Include="Assets\SFX\BGM_Battle_04.ogg" />
+    <None Include="Assets\SFX\BGM_MainMenu.ogg" />
+    <None Include="Assets\SFX\SFX_Explosion_01.ogg" />
+    <None Include="Assets\SFX\SFX_Laser_01.ogg" />
+    <None Include="Assets\SFX\SFX_Laser_02.ogg" />
+    <None Include="Assets\Shaders\scrollingTexture.frag" />
+    <None Include="Assets\Shaders\scrollingTexture.vert" />
     <None Include="GameInfo.settings">
       <Generator>PublicSettingsSingleFileGenerator</Generator>
       <LastGenOutput>GameInfo.Designer.cs</LastGenOutput>
@@ -132,18 +141,16 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Assets\BGM_Main_1.wav" />
-    <Content Include="Assets\BGM_Main_2.wav" />
-    <Content Include="Assets\BGM_Main_3.wav" />
-    <Content Include="Assets\BGM_Main_4.wav" />
-    <Content Include="Assets\BGM_Main_5.wav" />
-    <Content Include="Assets\BGM_MLG_Final.wav" />
-    <Content Include="Assets\BGM_MLG_Main.wav" />
-    <Content Include="Assets\BGM_MLG_Secret.wav" />
+    <Content Include="Assets\Background_01.png" />
+    <Content Include="Assets\Background_02.png" />
+    <Content Include="Assets\Background_03.png" />
+    <Content Include="Assets\Background_04.png" />
+    <Content Include="Assets\Bullet_01.png" />
     <Content Include="Assets\Enemy_01.png" />
+    <Content Include="Assets\Enemy_02.png" />
+    <Content Include="Assets\Enemy_03.png" />
+    <Content Include="Assets\Enemy_04.png" />
     <Content Include="Assets\Player_01.png" />
-    <Content Include="Assets\SFX_BlockHit.wav" />
-    <Content Include="Assets\SFX_PowerUp.wav" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
