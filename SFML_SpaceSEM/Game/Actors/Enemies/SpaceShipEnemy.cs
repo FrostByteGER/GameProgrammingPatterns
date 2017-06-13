@@ -16,7 +16,7 @@ namespace SFML_SpaceSEM.Game.Actors.Enemies
 			CollisionCallbacksEnabled = true;
 		}
 
-		public virtual void OnDeath()
+		public override void OnDeath()
 		{
 			--(LevelReference.GameMode as SpaceGameMode).EnemiesRemaining;
 		}

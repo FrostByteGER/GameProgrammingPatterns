@@ -4,7 +4,10 @@ using SFML_Engine.Engine.JUI;
 using SFML_SpaceSEM.UI;
 using System;
 using SFML.Audio;
+using SFML_Engine.Engine.Game;
+using SFML_Engine.Engine.Graphics;
 using SFML_Engine.Engine.IO;
+using SFML_Engine.Engine.Utility;
 
 namespace SFML_SpaceSEM.Game
 {
@@ -55,6 +58,8 @@ namespace SFML_SpaceSEM.Game
 
 		public Music MenuMusic { get; set; }
 
+		public Actor GameTitle { get; set; }
+
 		protected override void LevelTick(float deltaTime)
 		{
 			base.LevelTick(deltaTime);
@@ -65,6 +70,14 @@ namespace SFML_SpaceSEM.Game
 		protected override void InitLevel()
 		{
 			base.InitLevel();
+
+			GameTitle = new Actor(this);
+			var spriteComp = new SpriteComponent(new Sprite(
+				EngineReference.AssetManager.TextureManager.LoadTexture(AssetManager.AssetsPath + "Game_Header.png")));
+			GameTitle.SetRootComponent(spriteComp);
+			GameTitle.Position = new TVector2f(0, 0);
+			RegisterActor(GameTitle);
+
 			MenuMusic = SoundPoolManager.LoadMusic(SoundPoolManager.SFXPath + "BGM_MainMenu.ogg");
 
 			MenuMusic.Loop = true;

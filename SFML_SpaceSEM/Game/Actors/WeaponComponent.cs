@@ -46,9 +46,10 @@ namespace SFML_SpaceSEM.Game.Actors
 				var texture = ParentActor.LevelReference.EngineReference.AssetManager.TextureManager.LoadTexture(AssetManager.AssetsPath + "Bullet_01.png");
 				var bullet = new SpaceBullet(new Sprite(texture), ParentActor.LevelReference);
 				bullet.Instigator = ParentActor;
+				bullet.ActorName = "Bullet";
 				var root = bullet.GetRootComponent<PhysicsComponent>();
 				root.CanOverlap = true;
-				root.CollisionType = VelcroPhysics.Collision.Filtering.Category.Cat4;
+				root.CollisionType = VelcroPhysics.Collision.Filtering.Category.Cat5;
 				root.CollisionResponseChannels &= ~ParentActor.GetRootComponent<PhysicsComponent>().CollisionType;
 				root.CollisionResponseChannels &= ~root.CollisionType;
 				bullet.CollisionCallbacksEnabled = true;

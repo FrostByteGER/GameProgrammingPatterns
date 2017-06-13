@@ -86,13 +86,13 @@ namespace SFML_Engine.Engine.Physics
 				component.SetLocalRotation(EngineMath.RadiansToDegrees(ToGameUnits(body.Rotation)));
 				var actor = component.ParentActor;
 				if (actor == null) continue;
-
 			}
 		}
 
 		public void UnregisterPhysicsComponent(PhysicsComponent comp)
 		{
 			PhysicsWorld.RemoveBody(comp.CollisionBody);
+			comp.CollisionBody.Dispose();
 		}
 
 
@@ -372,6 +372,7 @@ namespace SFML_Engine.Engine.Physics
 
 		internal void ShutdownPhysicsEngine()
 		{
+			//PhysicsWorld.Step(0);
 			CanTick = false;
 			PhysicsWorld.Enabled = false;
 			PhysicsWorld.ClearForces();

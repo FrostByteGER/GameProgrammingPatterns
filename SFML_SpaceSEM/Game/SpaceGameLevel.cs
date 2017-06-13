@@ -36,6 +36,8 @@ namespace SFML_SpaceSEM.Game
 
 			var playerActor = new SpaceShipPlayer(new Sprite(new Texture(AssetManager.AssetsPath + "Player_01.png")), this);
 			playerActor.ActorName = "Player 1";
+			playerActor.MaxHealthpoints = 10;
+			playerActor.Healthpoints = 10;
 			playerActor.Position = new TVector2f(0.0f, 300.0f);
 
 			var playerController = new SpaceGamePlayerController(playerActor);
@@ -85,6 +87,20 @@ namespace SFML_SpaceSEM.Game
 			RegisterActor(topBorder);
 			RegisterActor(bottomBorder);
 			RegisterPlayer(playerController);
+			
+
+			var gameInstance = EngineReference.GameInstance as SpaceSEMGameInstance;
+
+			var highscoreText = new TextActor("Highscore: 0", gameInstance?.MainGameFont, this);
+			highscoreText.ActorName = "Highscore";
+			highscoreText.Position = new TVector2f(-175,375);
+
+			var healthText = new TextActor("Health: " + playerActor.Healthpoints, gameInstance?.MainGameFont, this);
+			healthText.ActorName = "Health";
+			healthText.Position = new TVector2f(175, 375);
+
+			RegisterActor(highscoreText);
+			RegisterActor(healthText);
 
 			GameMusic = SoundPoolManager.LoadMusic(SoundPoolManager.SFXPath + "BGM_Battle_0" + SpaceLevelID + ".ogg");
 

@@ -27,9 +27,10 @@ namespace SFML_SpaceSEM.Game
 		private void EnterNextLevel()
 		{
 			var engineRef = GameLevel.EngineReference;
-			if (GameLevel.SpaceLevelID == 4)
-				engineRef.RegisterEvent(
-					new SwitchLevelEvent<SwitchLevelParams>(new SwitchLevelParams(this, engineRef.LevelStack[0], true)));
+			if (GameLevel.SpaceLevelID == 4) {
+				engineRef.RegisterEvent(new SwitchLevelEvent<SwitchLevelParams>(new SwitchLevelParams(this, engineRef.LevelStack[0], true)));
+				return;
+			}
 			var newLevel = new SpaceGameLevel();
 			newLevel.SpaceLevelID = ++GameLevel.SpaceLevelID;
 			engineRef.RegisterEvent(new SwitchLevelEvent<SwitchLevelParams>(
