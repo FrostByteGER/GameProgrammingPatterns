@@ -121,6 +121,7 @@ namespace SFML_SpaceSEM.Game
 				helpCheckBox = new JCheckbox(GUI);
 				helpCheckBox.Text.DisplayedString = "Help";
 				helpCheckBox.Something += this.ChangeCenterContainer;
+				helpCheckBox.IsVisable = false;
 
 
 				creditsCheckBox = new JCheckbox(GUI);
@@ -132,6 +133,7 @@ namespace SFML_SpaceSEM.Game
 				editorsCheckBox.Text.DisplayedString = "Editor";
 				editorsCheckBox.Something += this.ChangeCenterContainer;
 				editorsCheckBox.IsVisable = false;
+				editorsCheckBox.IsEnabled = false;
 
 
 				exitCheckBox = new JCheckbox(GUI);
@@ -142,7 +144,7 @@ namespace SFML_SpaceSEM.Game
 				JCheckboxGroup mainCheckBoxGroup = new JCheckboxGroup();
 				mainCheckBoxGroup.AddBox(playCheckBox);
 				mainCheckBoxGroup.AddBox(optionCheckBox);
-				mainCheckBoxGroup.AddBox(helpCheckBox);
+				//mainCheckBoxGroup.AddBox(helpCheckBox);
 				mainCheckBoxGroup.AddBox(creditsCheckBox);
 				mainCheckBoxGroup.AddBox(editorsCheckBox);
 				mainCheckBoxGroup.AddBox(exitCheckBox);
@@ -397,7 +399,9 @@ namespace SFML_SpaceSEM.Game
 
 				JButton applyOptionButton = new JButton(GUI);
 				applyOptionButton.Text.DisplayedString = "Apply";
-				applyOptionButton.IsVisable = false;
+				applyOptionButton.IsVisable = true;
+				applyOptionButton.Something += MusicSlider_Something;
+				applyOptionButton.Something += SoundSlider_Something;
 
 				JButton cancelOptionButton = new JButton(GUI);
 				cancelOptionButton.Text.DisplayedString = "Cancel";
@@ -422,7 +426,11 @@ namespace SFML_SpaceSEM.Game
 			creditContainer = new JContainer(GUI);
 			creditContainer.Layout = new JLayout(creditContainer);
 			JLabel creditTemp = new JLabel(GUI);
-			creditTemp.Text.DisplayedString = "Made By Kevin Kügler and Jan Schult";
+			creditTemp.Text.DisplayedString = 
+				"   Made By\n" +
+				"Kevin Kügler\n" +
+				"    and\n" +
+				"  Jan Schult";
 			creditContainer.addElement(creditTemp);
 
 			// Editor Menue
@@ -538,7 +546,7 @@ namespace SFML_SpaceSEM.Game
 
 			mainLeftContainer.addElement(playCheckBox);
 			mainLeftContainer.addElement(optionCheckBox);
-			mainLeftContainer.addElement(helpCheckBox);
+			//mainLeftContainer.addElement(helpCheckBox);
 			mainLeftContainer.addElement(creditsCheckBox);
 			mainLeftContainer.addElement(editorsCheckBox);
 			mainLeftContainer.addElement(exitCheckBox);
@@ -548,26 +556,26 @@ namespace SFML_SpaceSEM.Game
 
 		private void MusicSlider_Something()
 		{
-			EngineReference.GlobalMusicVolume = (uint) musicSlider.SliderValue;
+			EngineReference.GlobalMusicVolume = (uint) (musicSlider.SliderValue * 100);
 			MenuMusic.Volume = EngineReference.GlobalMusicVolume;
 		}
 
 		private void SoundSlider_Something()
 		{
-			EngineReference.GlobalSoundVolume = (uint)soundSlider.SliderValue;
+			EngineReference.GlobalSoundVolume = (uint)(soundSlider.SliderValue * 100);
 		}
 
 		private void MusikBox_Something()
 		{
 			EngineReference.GlobalMusicEnabled = !EngineReference.GlobalMusicEnabled;
-			EngineReference.GlobalMusicVolume = (uint) (EngineReference.GlobalMusicEnabled ? 50 : 0);
+			//EngineReference.GlobalMusicVolume = (uint) (EngineReference.GlobalMusicEnabled ? 50 : 0);
 			MenuMusic.Volume = EngineReference.GlobalMusicVolume;
 		}
 
 		private void SoundBox_Something()
 		{
 			EngineReference.GlobalSoundEnabled = !EngineReference.GlobalSoundEnabled;
-			EngineReference.GlobalSoundVolume = (uint)(EngineReference.GlobalMusicEnabled ? 50 : 0);
+			//EngineReference.GlobalSoundVolume = (uint)(EngineReference.GlobalMusicEnabled ? 50 : 0);
 		}
 
 		public override void OnLevelLoad()
