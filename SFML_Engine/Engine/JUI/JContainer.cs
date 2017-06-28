@@ -8,6 +8,7 @@ namespace SFML_Engine.Engine.JUI
 	{
 		public JLayout Layout { set; get; }
 		public List<JElement> Elements { set; get; } = new List<JElement>();
+		public JDistanceContainer Margin { get; set; } = new JDistanceContainer();
 
 		public JContainer(JGUI gui) : base(gui)
 		{

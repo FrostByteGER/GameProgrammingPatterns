@@ -4,6 +4,7 @@
 	{
 		public SwitchLevelEvent(T parameters) : base(parameters)
 		{
+			Core.Engine.Instance.ActiveLevel.LevelTicking = false;
 		}
 
 		public override void ExecuteEvent()

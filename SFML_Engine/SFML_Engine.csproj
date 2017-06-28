@@ -96,6 +96,9 @@
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json.Schema, Version=3.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.Schema.3.0.1\lib\net45\Newtonsoft.Json.Schema.dll</HintPath>
+    </Reference>
     <Reference Include="sfmlnet-audio-2, Version=2.4.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Graphnode.SFML.Net.2.4\lib\sfmlnet-audio-2.dll</HintPath>
     </Reference>
@@ -144,11 +147,21 @@
     <Compile Include="Engine\Game\GameInstance.cs" />
     <Compile Include="Engine\Game\IDestroyable.cs" />
     <Compile Include="Engine\Game\LevelInfo.cs" />
+    <Compile Include="Engine\Game\Timer.cs" />
+    <Compile Include="Engine\Game\TimerManager.cs" />
+    <Compile Include="Engine\Graphics\AnimationComponent.cs" />
+    <Compile Include="Engine\Graphics\AnimationSprite.cs" />
+    <Compile Include="Engine\Graphics\InstancedRenderComponent.cs" />
+    <Compile Include="Engine\Graphics\InstancedSpriteComponent.cs" />
     <Compile Include="Engine\Graphics\ParticleSystems\ParticleSystem.cs" />
     <Compile Include="Engine\Graphics\ParticleSystems\ParticleSystemComponent.cs" />
     <Compile Include="Engine\Graphics\RenderComponent.cs" />
     <Compile Include="Engine\Graphics\Material.cs" />
     <Compile Include="Engine\Graphics\SpriteActor.cs" />
+    <Compile Include="Engine\Graphics\SpriteSheet.cs" />
+    <Compile Include="Engine\Graphics\TextActor.cs" />
+    <Compile Include="Engine\Graphics\TextComponent.cs" />
+    <Compile Include="Engine\IO\Config.cs" />
     <Compile Include="Engine\IO\JSONManager.cs" />
     <Compile Include="Engine\IO\AssetManager.cs" />
     <Compile Include="Engine\IO\ConfigManager.cs" />
@@ -157,12 +170,12 @@
     <Compile Include="Engine\IO\TexturePoolManager.cs" />
     <Compile Include="Engine\JUI\JBorderLayout.cs" />
     <Compile Include="Engine\JUI\JChooser.cs" />
+    <Compile Include="Engine\JUI\JDistanceContainer.cs" />
     <Compile Include="Engine\JUI\JGridLayout.cs" />
     <Compile Include="Engine\JUI\JGUI.cs" />
     <Compile Include="Engine\IO\IControllable.cs" />
     <Compile Include="Engine\Physics\CollisionComponent.cs" />
     <Compile Include="Engine\Physics\OverlapComponent.cs" />
-    <Compile Include="Engine\Physics\BulletPhysicsEngine.cs" />
     <Compile Include="Engine\JUI\JButton.cs" />
     <Compile Include="Engine\JUI\JCheckboxGroup.cs" />
     <Compile Include="Engine\JUI\JCheckbox.cs" />
@@ -196,8 +209,11 @@
     <Compile Include="Engine\Utility\EngineMath.cs" />
     <Compile Include="Engine\Core\Engine.cs" />
     <Compile Include="Engine\Start.cs" />
+    <Compile Include="Engine\Utility\ActorSpawner.cs" />
     <Compile Include="Engine\Utility\TTransformable.cs" />
+    <Compile Include="Engine\Utility\TVector2.cs" />
     <Compile Include="Engine\Utility\TVector2f.cs" />
+    <Compile Include="Engine\Utility\TVector2i.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="EngineInfo.Designer.cs">
       <AutoGen>True</AutoGen>

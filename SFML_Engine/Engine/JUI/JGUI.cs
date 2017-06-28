@@ -168,7 +168,7 @@ namespace SFML_Engine.Engine.JUI
 			{
 				if (RootContainer.Layout != null)
 				{
-					//RootContainer.Layout.ReSize();
+					RootContainer.Layout.ReSize();
 				}
 				
 				RootContainer.Draw(target, states);
@@ -206,11 +206,11 @@ namespace SFML_Engine.Engine.JUI
 			{
 				if (HoverElement.IsPressed)
 				{
-					HoverElement.Drag(sender, SelecterPoint);
+					HoverElement.Drag(SelecterPoint);
 				}
 				else
 				{
-					HoverElement.OnMouseMoved(sender, SelecterPoint);
+					HoverElement.Hover(SelecterPoint);
 				}		
 			}
 		}
@@ -288,11 +288,11 @@ namespace SFML_Engine.Engine.JUI
 			{
 				if (HoverElement.IsPressed)
 				{
-					HoverElement.Drag(sender, SelecterPoint);
+					HoverElement.Drag(SelecterPoint);
 				}
 				else
 				{
-					HoverElement.OnMouseMoved(sender, SelecterPoint);
+					HoverElement.Hover(SelecterPoint);
 				}
 			}
 		}

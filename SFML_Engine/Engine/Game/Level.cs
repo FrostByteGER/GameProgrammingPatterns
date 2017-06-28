@@ -20,11 +20,14 @@ namespace SFML_Engine.Engine.Game
 		public uint ActorIDCounter { get; private set; } = 0;
 
 	    [JsonProperty()]
-		internal List<Actor> Actors { get; set; } = new List<Actor>();
+		private List<Actor> _actors = new List<Actor>();
 
-		/// <summary>
-		/// Bounds of this level. To get actual height and width, multiply the X and Y value by 2.
-		/// </summary>
+	    [JsonIgnore]
+	    internal ReadOnlyCollection<Actor> Actors => new ReadOnlyCollection<Actor>(_actors);
+
+	    /// <summary>
+	    /// Bounds of this level. To get actual height and width, multiply the X and Y value by 2.
+	    /// </summary>
 	    public TVector2f LevelBounds { get; set; } = new TVector2f(float.MaxValue / 2.0f, float.MaxValue / 2.0f);
 
 		/// <summary>
@@ -50,16 +53,20 @@ namespace SFML_Engine.Engine.Game
 
 		public List<PlayerController> Players { get; private set; } = new List<PlayerController>();
 
+	    public TimerManager TimerManager { get; private set; } = new TimerManager();
+
 		/// <summary>
 		/// Count of Layers. ZERO-BASED! ACTUAL LAYER COUNT IS LAYERS+1.
 		/// <para>Layers are sorted from front to back. So 0 is the front and Layers.MaxValue is the back. Usually the most front layer(0) is the UI layer.</para>
 		/// </summary>
 	    public uint Layers { get; set; } = 2;
 
+	    public ActorSpawner Spawner { get; set; } = new ActorSpawner();
+
 
 		public Level()
-        {
-        }
+		{
+		}
 
 	    protected internal virtual void InitLevel()
 	    {
@@ -75,13 +82,13 @@ namespace SFML_Engine.Engine.Game
 				if (!pc.CanTick) continue;
 				pc.Tick(deltaTime);
 			}
-			foreach (var actor in Actors)
+			foreach (var actor in _actors)
             {
 	            if (!actor.CanTick) continue;
 				actor.Tick(deltaTime);
             }
-	        if (!GameMode.CanTick) return;
-			GameMode.Tick(deltaTime);
+	        if (GameMode.CanTick) GameMode.Tick(deltaTime);
+	        if (TimerManager.CanTick) TimerManager.Tick(deltaTime);
         }
 
         protected internal virtual void LevelDraw(ref RenderWindow renderWindow)
@@ -90,7 +97,7 @@ namespace SFML_Engine.Engine.Game
 	        {
 		        renderWindow.SetView(pc.PlayerCamera);
 				// TODO: Evaluate Performance!
-		        var drawableActors = Actors.FindAll(a => a.Visible).OrderByDescending(a => a.LayerID);
+		        var drawableActors = _actors.FindAll(a => a.Visible).OrderByDescending(a => a.LayerID);
 				foreach (var actor in drawableActors)
 				{
 					var c1 = actor.GetComponents<RenderComponent>();
@@ -108,7 +115,7 @@ namespace SFML_Engine.Engine.Game
 	    {
 		    InitLevel();
 			Console.WriteLine("Level #" + LevelID + " Loaded");
-			foreach (var actor in Actors)
+			foreach (var actor in _actors)
 		    {
 			    actor.InitializeActor();
 		    }
@@ -129,7 +136,7 @@ namespace SFML_Engine.Engine.Game
 				if (!pc.IsActive) continue;
 				pc.OnGameStart();
 			}
-			foreach (var actor in Actors)
+			foreach (var actor in _actors)
 		    {
 			    actor.OnGameStart();
 		    }
@@ -146,7 +153,7 @@ namespace SFML_Engine.Engine.Game
 				if (!pc.IsActive) continue;
 				pc.OnGamePause();
 			}
-			foreach (var actor in Actors)
+			foreach (var actor in _actors)
 			{
 				actor.OnGamePause();
 			}
@@ -163,7 +170,7 @@ namespace SFML_Engine.Engine.Game
 				if (!pc.IsActive) continue;
 				pc.OnGameResume();
 			}
-			foreach (var actor in Actors)
+			foreach (var actor in _actors)
 			{
 				actor.OnGameResume();
 			}
@@ -177,7 +184,7 @@ namespace SFML_Engine.Engine.Game
 			{
 				pc.OnGameEnd();
 			}
-			foreach (var actor in Actors)
+			foreach (var actor in _actors)
 			{
 				actor.OnGameEnd();
 			}
@@ -190,36 +197,85 @@ namespace SFML_Engine.Engine.Game
 	    internal virtual void ShutdownLevel()
 	    {
 		    LevelLoaded = false;
-		    PhysicsEngine.ShutdownPhysicsEngine();
+
+		    UnregisterActors();
+			UnregisterPlayers();
+			PhysicsEngine.ShutdownPhysicsEngine();
 			Dispose();
 	    }
 
-		public void RegisterActorComponent(ActorComponent component)
+	    public T SpawnActor<T>() where T : Actor
+	    {
+			var actor =  Spawner.SpawnObject<T>(this);
+		    RegisterActor(actor);
+			return actor;
+	    }
+
+		public Actor SpawnActor(Type actorType)
 		{
-			component.ComponentID = ActorIDCounter;
-			++ActorIDCounter;
-			Console.WriteLine("Trying to register ActorComponent: " + component);
+			if (!actorType.IsSubclassOf(typeof(Actor)) && actorType != typeof(Actor)) return null;
+			var actor = Spawner.SpawnObject(actorType, this) as Actor;
+			RegisterActor(actor);
+			return actor;
+		}
+
+		public void SpawnActorDeferred<T>(Actor instigator) where T : Actor
+		{
+			Core.Engine.Instance.RegisterEvent(new SpawnActorEvent<SpawnActorParams>(new SpawnActorParams(instigator, typeof(T), this)));
+		}
+
+		public void SpawnActorDeferred<T>() where T : Actor
+		{
+			Core.Engine.Instance.RegisterEvent(new SpawnActorEvent<SpawnActorParams>(new SpawnActorParams(this, typeof(T), this)));
+		}
+
+		public void SpawnActorDeferred(Actor instigator, Type actorType)
+		{
+			if (!actorType.IsSubclassOf(typeof(Actor)) && actorType != typeof(Actor)) return;
+			Core.Engine.Instance.RegisterEvent(new SpawnActorEvent<SpawnActorParams>(new SpawnActorParams(instigator, actorType, this)));
+		}
+
+		public void SpawnActorDeferred(Type actorType)
+		{
+			if (!actorType.IsSubclassOf(typeof(Actor)) && actorType != typeof(Actor)) return;
+			Core.Engine.Instance.RegisterEvent(new SpawnActorEvent<SpawnActorParams>(new SpawnActorParams(this, actorType, this)));
 		}
 
 		public void RegisterActor(Actor actor)
 		{
+			if (ContainsActorInLevel(actor)) return;
 			actor.ActorID = ActorIDCounter;
 			++ActorIDCounter;
 			actor.LevelID = LevelID;
 			actor.LevelReference = this;
 			Console.WriteLine("Trying to register Actor: " + actor);
-			foreach (var component in actor.Components)
-			{
-				RegisterActorComponent(component);
-			}
-			Actors.Add(actor);
+			_actors.Add(actor);
 		}
+
+	    public void UnregisterActors()
+	    {
+			Console.WriteLine("Removing all Actors!");
+
+			foreach (var actor in _actors)
+			{
+				actor.OnActorDestroy();
+				foreach (var comp in actor.Components)
+				{
+					var physComp = comp as PhysicsComponent;
+					if (physComp != null)
+					{
+						PhysicsEngine.UnregisterPhysicsComponent(physComp);
+					}
+				}
+			}
+		    _actors.Clear();
+	    }
 
 		public bool UnregisterActor(Actor actor)
 		{
 			Console.WriteLine("Trying to remove Actor: " + actor);
 			actor.OnActorDestroy();
-			var removal = Actors.Remove(actor);
+			var removal = _actors.Remove(actor);
 			foreach (var comp in actor.Components)
 			{
 				var physComp = comp as PhysicsComponent;
@@ -238,59 +294,54 @@ namespace SFML_Engine.Engine.Game
 			return UnregisterActor(actor);
 		}
 
+	    public bool ContainsActorInLevel(string name)
+	    {
+		    return FindActorInLevel(name) != null;
+	    }
+
+	    public bool ContainsActorInLevel(Actor actor)
+	    {
+		    return _actors.Contains(actor);
+	    }
+
 		public Actor FindActorInLevel(string name)
 	    {
-		    return Actors.Find(x => x.ActorName == name);
+		    return _actors.Find(x => x.ActorName == name);
 	    }
 
 		public T FindActorInLevel<T>(string name) where T : Actor
 		{
-			return (T)Actors.Find(x => x.ActorName == name);
+			return (T)_actors.Find(x => x.ActorName == name);
 		}
 
 		public Actor FindActorInLevel(uint id)
 	    {
-		    return Actors.Find(x => x.ActorID == id);
+		    return _actors.Find(x => x.ActorID == id);
 		}
 
 		public T FindActorInLevel<T>(uint id) where T : Actor
 		{
-			return (T)Actors.Find(x => x.ActorID == id);
+			return (T)_actors.Find(x => x.ActorID == id);
 		}
 
-		public List<Actor> FindActorsInLevel(string name)
+		public IEnumerable<Actor> FindActorsInLevel(string name)
 	    {
-		    return Actors.FindAll(x => x.ActorName == name);
+		    return _actors.FindAll(x => x.ActorName == name);
 		}
 
-		public List<T> FindActorsInLevel<T>(string name) where T : Actor
+		public IEnumerable<T> FindActorsInLevel<T>(string name) where T : Actor
 		{
-			return Actors.FindAll(x => x.ActorName == name).Cast<T>().ToList();
+			return _actors.FindAll(x => x.ActorName == name).Cast<T>();
 		}
 
-		public List<Actor> FindActorsInLevel(Type actor)
+		public IEnumerable<Actor> FindActorsInLevel(Type actor)
 	    {
-		    return Actors.FindAll(x => x.GetType() == actor);
+		    return _actors.FindAll(x => x.GetType() == actor);
 		}
 
-		public List<T> FindActorsInLevel<T>() where T : Actor
+		public IEnumerable<T> FindActorsInLevel<T>() where T : Actor
 		{
-			return Actors.FindAll(x => x is T).Cast<T>().ToList();
-		}
-
-		public ReadOnlyCollection<Actor> GetActors()
-	    {
-		    return Actors.AsReadOnly();
-	    }
-
-	    public void SpawnActor(Actor instigator, Actor actor)
-	    {
-			Core.Engine.Instance.RegisterEvent(new SpawnActorEvent<SpawnActorParams>(new SpawnActorParams(instigator, actor, LevelID)));
-		}
-
-		public void SpawnActor(Actor actor)
-		{
-			Core.Engine.Instance.RegisterEvent(new SpawnActorEvent<SpawnActorParams>(new SpawnActorParams(this, actor, LevelID)));
+			return _actors.FindAll(x => x is T).Cast<T>();
 		}
 
 		public void PauseActor(Actor instigator, Actor actor)
@@ -318,10 +369,7 @@ namespace SFML_Engine.Engine.Game
 		/// <param name="pc"></param>
 		public void RegisterPlayer(PlayerController pc)
 		{
-			Players.Add(pc);
-			pc.LevelReference = this;
-			pc.ID = (uint)Players.Count - 1;
-			pc.MarkedForInputRegistering = true;
+			RegisterPlayer(pc, true);
 		}
 
 		/// <summary>
@@ -330,10 +378,20 @@ namespace SFML_Engine.Engine.Game
 		/// <param name="pc"></param>
 		public void RegisterPlayer(PlayerController pc, bool active)
 		{
-			Players.Add(pc);
 			pc.LevelReference = this;
 			pc.ID = (uint)Players.Count - 1;
+			Players.Add(pc);
 			pc.MarkedForInputRegistering = active;
+		}
+
+		public void UnregisterPlayers()
+		{
+			Console.WriteLine("Removing all Players!");
+			foreach (var pc in Players)
+			{
+				pc.IsActive = false;
+			}
+			Players.Clear();
 		}
 
 		public bool UnregisterPlayer(PlayerController pc)
@@ -358,6 +416,21 @@ namespace SFML_Engine.Engine.Game
 		public T FindPlayer<T>(uint playerID) where T : PlayerController
 		{
 			return (T)Players.Find(x => x.ID == playerID);
+		}
+
+	    public void RegisterTimer(Timer timer)
+	    {
+		    TimerManager.AddTimer(timer);
+	    }
+
+		public void UnregisterTimer(Timer timer)
+		{
+			TimerManager.RemoveTimer(timer);
+		}
+
+		public void UnregisterTimer(int index)
+		{
+			TimerManager.RemoveTimer(index);
 		}
 
 		protected bool Equals(Level other)
@@ -401,11 +474,11 @@ namespace SFML_Engine.Engine.Game
 
 		public void Destroy(bool disposing)
 		{
-			foreach (var actor in Actors)
+			foreach (var actor in _actors)
 			{
 				actor.Dispose();
 			}
-			Actors.Clear();
+			_actors.Clear();
 		}
 	}
 }
